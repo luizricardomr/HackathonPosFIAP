@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using VideoQRCode.API.Domain;
+using VideoQRCode.API.Infra.Repository;
 using VideoQRCode.API.Producers;
 using VideoQRCode.Core;
 
@@ -7,15 +9,18 @@ namespace VideoQRCode.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class Video : ControllerBase
+    public class VideoController : ControllerBase
     {
         private readonly IVideoProducer _producer;
         private readonly IConfiguration _config;
-        public Video(IVideoProducer producer,
-                     IConfiguration config)
+        private readonly IVideoRepository _videoRepository;
+        public VideoController(IVideoProducer producer,
+                     IConfiguration config,
+                     IVideoRepository videoRepository)
         {
             _producer = producer;
             _config = config;
+            _videoRepository = videoRepository;
         }
 
         [HttpPost("upload")]
@@ -38,16 +43,24 @@ namespace VideoQRCode.Controllers
 
             var message = new VideoMessage
             {
+                Id = Guid.NewGuid(),
                 FileName = file.FileName,
                 Path = fullPath,
                 UploadedAt = DateTime.UtcNow
             };
 
             await _producer.ExecuteAsync(message);
+            await _videoRepository.AddAsync(new Video(message));
 
             return Ok(new { message = "Vídeo enviado", path = fullPath });
             
-        }           
-        
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var videos = await _videoRepository.GetAllAsync();
+            return Ok(videos);
+        }
+
     }
 }
