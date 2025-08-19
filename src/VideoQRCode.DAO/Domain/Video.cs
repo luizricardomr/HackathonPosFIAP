@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using VideoQRCode.Core;
 
-namespace VideoQRCode.API.Domain
+namespace VideoQRCode.DAO.Domain
 {
     public class Video
     {
@@ -12,15 +12,15 @@ namespace VideoQRCode.API.Domain
         public string FileName { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
         public string Status { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public Video(VideoMessage message)
+        public Video(VideoMessage message, string status)
         {
             Id = message.Id;
             FileName = message.FileName;
             Path = message.Path;
             CreatedAt = message.UploadedAt;
-            Status = "Na Fila";
+            Status = status;
         }
     }
 }

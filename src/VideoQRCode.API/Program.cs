@@ -13,6 +13,7 @@ builder.Services.AddMongo(builder.Configuration);
 
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 builder.Services.AddScoped<IVideoProducer, VideoProducer>();
+builder.Services.AddScoped<IConteudoVideoRepository, ConteudoVideoRepository>();
 
 RabbitConfiguration.Configure(builder);
 

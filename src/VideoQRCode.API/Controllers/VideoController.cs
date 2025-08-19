@@ -14,13 +14,16 @@ namespace VideoQRCode.Controllers
         private readonly IVideoProducer _producer;
         private readonly IConfiguration _config;
         private readonly IVideoRepository _videoRepository;
+        private readonly IConteudoVideoRepository _conteudoRepository;
         public VideoController(IVideoProducer producer,
                      IConfiguration config,
-                     IVideoRepository videoRepository)
+                     IVideoRepository videoRepository,
+                     IConteudoVideoRepository conteudoRepository)
         {
             _producer = producer;
             _config = config;
             _videoRepository = videoRepository;
+            _conteudoRepository = conteudoRepository;
         }
 
         [HttpPost("upload")]
@@ -61,6 +64,11 @@ namespace VideoQRCode.Controllers
             var videos = await _videoRepository.GetAllAsync();
             return Ok(videos);
         }
-
+        [HttpGet("GetConteudo/{videoId}")]
+        public async Task<IActionResult> GetConteudoById(Guid videoId)
+        {
+            var videos = await _conteudoRepository.GetByVideoIdAsync(videoId);
+            return Ok(videos);
+        }
     }
 }
