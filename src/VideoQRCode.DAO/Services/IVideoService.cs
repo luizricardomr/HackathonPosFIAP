@@ -1,4 +1,4 @@
-﻿using VideoQRCode.Core;
+﻿using VideoQRCode.Core.Message;
 
 namespace VideoQRCode.DAO.Services
 {

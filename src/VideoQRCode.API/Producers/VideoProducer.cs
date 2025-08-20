@@ -2,7 +2,7 @@
 using MassTransit;
 using Microsoft.Extensions.Options;
 using VideoQRCode.API.Configuration;
-using VideoQRCode.Core;
+using VideoQRCode.Core.Message;
 
 namespace VideoQRCode.API.Producers
 {

@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using VideoQRCode.API.Domain;
 
 namespace VideoQRCode.API.Infra
 {

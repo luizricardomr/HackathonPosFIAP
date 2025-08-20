@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using VideoQRCode.Core;
+using VideoQRCode.Core.Message;
 using VideoQRCode.DAO.Infra.Repository;
 using VideoQRCode.DAO.Services;
 

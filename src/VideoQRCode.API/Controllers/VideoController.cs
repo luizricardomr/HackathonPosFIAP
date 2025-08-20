@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using VideoQRCode.API.Domain;
 using VideoQRCode.API.Infra.Repository;
 using VideoQRCode.API.Producers;
-using VideoQRCode.Core;
+using VideoQRCode.Core.Domain;
+using VideoQRCode.Core.Message;
+using VideoQRCode.Core.Utils;
 
 
 namespace VideoQRCode.Controllers
@@ -15,15 +16,18 @@ namespace VideoQRCode.Controllers
         private readonly IConfiguration _config;
         private readonly IVideoRepository _videoRepository;
         private readonly IConteudoVideoRepository _conteudoRepository;
+        private readonly IFileStorageService _fileStorage;
         public VideoController(IVideoProducer producer,
                      IConfiguration config,
                      IVideoRepository videoRepository,
-                     IConteudoVideoRepository conteudoRepository)
+                     IConteudoVideoRepository conteudoRepository,
+                     IFileStorageService fileStorage)
         {
             _producer = producer;
             _config = config;
             _videoRepository = videoRepository;
             _conteudoRepository = conteudoRepository;
+            _fileStorage = fileStorage;
         }
 
         [HttpPost("upload")]
@@ -32,17 +36,10 @@ namespace VideoQRCode.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("Nenhum arquivo enviado");
 
-            var uploadsDir = _config["Storage:UploadPath"];
-            if (!Directory.Exists(uploadsDir))
-                Directory.CreateDirectory(uploadsDir);
+            if (!file.ContentType.StartsWith("video/"))
+                return BadRequest("Formato inválido. Envie um arquivo de vídeo.");
 
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var fullPath = Path.Combine(uploadsDir, fileName);
-
-            using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
+            var fullPath = await _fileStorage.SaveFileAsync(file, "videos");
 
             var message = new VideoMessage
             {

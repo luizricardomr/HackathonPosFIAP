@@ -1,4 +1,4 @@
-﻿using VideoQRCode.DAO.Domain;
+﻿using VideoQRCode.Core.Domain;
 using VideoQRCode.DAO.Infra.Repository;
 
 namespace VideoQRCode.DAO.Services

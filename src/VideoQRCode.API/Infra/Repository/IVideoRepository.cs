@@ -1,4 +1,4 @@
-﻿using VideoQRCode.API.Domain;
+﻿using VideoQRCode.Core.Domain;
 
 namespace VideoQRCode.API.Infra.Repository
 {

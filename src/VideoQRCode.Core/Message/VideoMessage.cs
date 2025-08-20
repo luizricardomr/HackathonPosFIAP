@@ -1,4 +1,4 @@
-﻿namespace VideoQRCode.Core
+﻿namespace VideoQRCode.Core.Message
 {
     public class VideoMessage
     {

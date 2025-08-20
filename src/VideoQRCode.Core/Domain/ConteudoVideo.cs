@@ -1,13 +1,13 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace VideoQRCode.DAO.Domain
+namespace VideoQRCode.Core.Domain
 {
     public class ConteudoVideo
     {
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
-        public Guid Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }  
 
         [BsonRepresentation(BsonType.String)]
         public Guid VideoId { get; set; } 
@@ -16,6 +16,6 @@ namespace VideoQRCode.DAO.Domain
 
         public string Timestamp { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
