@@ -7,6 +7,7 @@
     <UserSecretsId>8471661d-793d-4530-be23-892fafa88b8c</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+	<CodePage>65001</CodePage> <!-- UTF-8 -->
   </PropertyGroup>
 
   <ItemGroup>	  

@@ -4,9 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+	  <CodePage>65001</CodePage>
+	  <!-- UTF-8 -->
   </PropertyGroup>
 
   <ItemGroup>
