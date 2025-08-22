@@ -31,7 +31,7 @@ namespace VideoQRCode.Controllers
                 return BadRequest("Nenhum arquivo enviado");
 
             if (!file.ContentType.StartsWith("video/"))
-                return BadRequest("Formato inválido. Envie um arquivo de vídeo.");
+                return BadRequest("Formato invalido. Envie um arquivo de video.");
 
             var fullPath = await _fileStorage.SaveFileAsync(file, "videos");
 
@@ -46,7 +46,7 @@ namespace VideoQRCode.Controllers
             await _producer.ExecuteAsync(message);
             await _videoRepository.AddAsync(new Video(message));
 
-            return Ok(new { message = "Vídeo enviado", path = fullPath });
+            return Ok(new { message = "Video enviado", path = fullPath });
             
         }
         [HttpGet]
