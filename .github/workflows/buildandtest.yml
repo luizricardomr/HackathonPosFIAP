@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set Git to UTF-8
+        run: git config --global core.autocrlf input
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -36,6 +39,9 @@ jobs:
     name: Run Integration Tests
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set Git to UTF-8
+        run: git config --global core.autocrlf input
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
