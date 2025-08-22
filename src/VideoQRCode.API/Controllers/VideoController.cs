@@ -13,20 +13,14 @@ namespace VideoQRCode.Controllers
     public class VideoController : ControllerBase
     {
         private readonly IVideoProducer _producer;
-        private readonly IConfiguration _config;
-        private readonly IVideoRepository _videoRepository;
-        private readonly IConteudoVideoRepository _conteudoRepository;
+        private readonly IVideoRepository _videoRepository;        
         private readonly IFileStorageService _fileStorage;
         public VideoController(IVideoProducer producer,
-                     IConfiguration config,
                      IVideoRepository videoRepository,
-                     IConteudoVideoRepository conteudoRepository,
                      IFileStorageService fileStorage)
         {
             _producer = producer;
-            _config = config;
             _videoRepository = videoRepository;
-            _conteudoRepository = conteudoRepository;
             _fileStorage = fileStorage;
         }
 
@@ -61,11 +55,6 @@ namespace VideoQRCode.Controllers
             var videos = await _videoRepository.GetAllAsync();
             return Ok(videos);
         }
-        [HttpGet("GetConteudo/{videoId}")]
-        public async Task<IActionResult> GetConteudoById(Guid videoId)
-        {
-            var videos = await _conteudoRepository.GetByVideoIdAsync(videoId);
-            return Ok(videos);
-        }
+        
     }
 }
