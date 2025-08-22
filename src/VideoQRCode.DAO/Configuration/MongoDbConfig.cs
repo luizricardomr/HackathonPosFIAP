@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 
 namespace VideoQRCode.DAO.Configuration
 {
@@ -6,6 +8,7 @@ namespace VideoQRCode.DAO.Configuration
     {
         public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration)
         {
+            BsonSerializer.RegisterSerializer(new DateTimeSerializer(DateTimeKind.Local));
             var mongoSection = configuration.GetSection("MongoDb");
             var connectionString = mongoSection["ConnectionString"];
             var databaseName = mongoSection["DatabaseName"];

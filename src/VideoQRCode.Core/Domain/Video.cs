@@ -12,7 +12,7 @@ namespace VideoQRCode.Core.Domain
         public string FileName { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
         public string Status { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public Video(VideoMessage message)
         {
