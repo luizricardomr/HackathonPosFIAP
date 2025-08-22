@@ -9,11 +9,12 @@ RabbitConfiguration.Configure(builder);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API V1");
+    c.RoutePrefix = "swagger"; // deixa o caminho em /swagger
+});
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

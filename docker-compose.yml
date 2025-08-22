@@ -3,8 +3,9 @@
     container_name: rabbitmq
     image: "masstransit/rabbitmq"
     ports:
-        - "5672:5672"
-        - "15672:15672"
+      - "5672:5672"
+      - "15672:15672"
+
   mongo:
     image: mongo:6
     container_name: mongo
@@ -13,6 +14,40 @@
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+
+  videoqrcode-api:
+    build:
+      context: .
+      dockerfile: src/VideoQRCode.API/Dockerfile
+    container_name: videoqrcode-api
+    depends_on:
+      - rabbitmq
+      - mongo
+      - videoqrcode-dao
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+    ports:
+      - "5001:8080"
+      - "5002:8081"
+    volumes:
+      - uploads:/app/uploads
+
+  videoqrcode-dao:
+    build:
+      context: .
+      dockerfile: src/VideoQRCode.DAO/Dockerfile
+    container_name: videoqrcode-dao
+    depends_on:
+      - rabbitmq
+      - mongo
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+    ports:
+      - "6001:8080"
+      - "6002:8081"
+    volumes:
+      - uploads:/app/uploads
+
 volumes:
-  files:
+  uploads:
   mongo_data:

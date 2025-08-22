@@ -1,5 +1,6 @@
-﻿using System.Drawing;
-using ZXing.Windows.Compatibility;
+﻿using SkiaSharp;
+using System.Collections.Concurrent;
+using ZXing.SkiaSharp;
 
 namespace VideoQRCode.DAO.Utils
 {
@@ -7,15 +8,16 @@ namespace VideoQRCode.DAO.Utils
     {
         public async Task<List<(string Conteudo, string Timestamp)>> ProcessFramesAsync(string[] frames)
         {
-            var results = new List<(string Conteudo, string Timestamp)>();
-            var barcodeReader = new BarcodeReader();
+            var results = new ConcurrentBag<(string Conteudo, string Timestamp)>();           
 
-            foreach (var path in frames)
+            await Parallel.ForEachAsync(frames, async (path, token) =>
             {
                 try
                 {
-                    using var bitmap = (Bitmap)Image.FromFile(path);
-                    var result = barcodeReader.Decode(bitmap);
+                    var barcodeReader = new BarcodeReader(); // versão não genérica
+                    using var bitmap = SKBitmap.Decode(path); // SkiaSharp lê diretamente do arquivo
+                    var source = new ZXing.SkiaSharp.SKBitmapLuminanceSource(bitmap);
+                    var result = barcodeReader.Decode(source);
 
                     if (result != null)
                     {
@@ -27,7 +29,9 @@ namespace VideoQRCode.DAO.Utils
                 {
                     Console.WriteLine($"Erro processando frame {path}: {ex.Message}");
                 }
-            }
+
+                await Task.Yield();
+            });
 
             return results.OrderBy(r => r.Timestamp).ToList();
         }

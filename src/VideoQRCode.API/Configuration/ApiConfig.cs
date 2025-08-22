@@ -1,4 +1,5 @@
-﻿using VideoQRCode.API.Infra.Repository;
+﻿using Microsoft.OpenApi.Models;
+using VideoQRCode.API.Infra.Repository;
 using VideoQRCode.API.Producers;
 using VideoQRCode.Core.Utils;
 
@@ -10,7 +11,20 @@ namespace VideoQRCode.API.Configuration
         {
             services.AddControllers();
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Video QRCODE API",
+                    Version = "v1",
+                    Description = "HACKATHON realizado pelo grupo 13",
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT",
+                        Url = new Uri("https://opensource.org/licenses/MIT")
+                    }
+                });
+            });
 
             services.AddScoped<IVideoRepository, VideoRepository>();
             services.AddScoped<IVideoProducer, VideoProducer>();

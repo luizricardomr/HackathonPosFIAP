@@ -1,10 +1,6 @@
-﻿
-using FFMpegCore;
-using System.Drawing;
-using VideoQRCode.Core.Message;
+﻿using VideoQRCode.Core.Message;
 using VideoQRCode.DAO.Infra.Repository;
 using VideoQRCode.DAO.Utils;
-using ZXing.Windows.Compatibility;
 
 namespace VideoQRCode.DAO.Services
 {
