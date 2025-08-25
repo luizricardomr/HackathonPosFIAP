@@ -14,8 +14,8 @@ namespace VideoQRCode.DAO.Utils
             {
                 try
                 {
-                    var barcodeReader = new BarcodeReader(); // versão não genérica
-                    using var bitmap = SKBitmap.Decode(path); // SkiaSharp lê diretamente do arquivo
+                    var barcodeReader = new BarcodeReader(); 
+                    using var bitmap = SKBitmap.Decode(path);
                     var source = new ZXing.SkiaSharp.SKBitmapLuminanceSource(bitmap);
                     var result = barcodeReader.Decode(source);
 

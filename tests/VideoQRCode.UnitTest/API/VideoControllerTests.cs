@@ -75,7 +75,7 @@ namespace VideoQRCode.UnitTest.API
 
             // Assert
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Formato inválido. Envie um arquivo de vídeo.", badRequest.Value);
+            Assert.Equal("Formato invalido. Envie um arquivo de video.", badRequest.Value);
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace VideoQRCode.UnitTest.API
             var value = okResult.Value.GetType().GetProperty("message")?.GetValue(okResult.Value, null);
             var path = okResult.Value.GetType().GetProperty("path")?.GetValue(okResult.Value, null);
 
-            Assert.Equal("Vídeo enviado", value);
+            Assert.Equal("Video enviado", value);
             Assert.Equal(expectedPath, path);
 
             _fileStorageMock.Verify(s => s.SaveFileAsync(fileMock, "videos"), Times.Once);

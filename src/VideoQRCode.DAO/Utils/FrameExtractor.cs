@@ -9,7 +9,7 @@ namespace VideoQRCode.DAO.Utils
         public FrameExtractor(IConfiguration config)
         {
             _uploadPath = config["Storage:UploadPath"]
-                ?? throw new ArgumentNullException("Storage:UploadPath not configured");
+                ?? throw new ArgumentNullException("Storage:UploadPath não configuravel");
         }
 
         public async Task<string[]> ExtractFramesAsync(string videoPath)
