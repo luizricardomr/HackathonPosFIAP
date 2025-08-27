@@ -1,6 +1,6 @@
-﻿using MassTransit;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using VideoQRCode.API.Producers;
+using MassTransit;
 
 namespace VideoQRCode.API.Configuration
 {
@@ -9,7 +9,7 @@ namespace VideoQRCode.API.Configuration
     {
         public static WebApplicationBuilder Configure(this WebApplicationBuilder builder)
         {
-            //RabbitMQ
+            // Configuração básica
             builder.Services
                 .Configure<MassTransitConfig>(builder.Configuration.GetSection("MassTransit"))
                 .AddScoped<IVideoProducer, VideoProducer>();
@@ -19,18 +19,34 @@ namespace VideoQRCode.API.Configuration
             var user = config.GetSection("MassTransit")["user"] ?? string.Empty;
             var password = config.GetSection("MassTransit")["password"] ?? string.Empty;
 
-            builder.Services.AddMassTransit(x =>
+            // Condicional de ambiente
+            if (!builder.Environment.IsEnvironment("IntegrationTest"))
             {
-                x.UsingRabbitMq((context, cfg) =>
+                // Produção / desenvolvimento normal: RabbitMQ
+                builder.Services.AddMassTransit(x =>
                 {
-                    cfg.Host(server, "/", h =>
+                    x.UsingRabbitMq((context, cfg) =>
                     {
-                        h.Username(user);
-                        h.Password(password);
+                        cfg.Host(server, "/", h =>
+                        {
+                            h.Username(user);
+                            h.Password(password);
+                        });
+                        cfg.ConfigureEndpoints(context);
                     });
-                    cfg.ConfigureEndpoints(context);
                 });
-            });
+            }
+            else
+            {
+                // Ambiente de teste: transporte em memória, sem EventLog
+                builder.Services.AddMassTransit(x =>
+                {
+                    x.UsingInMemory((context, cfg) =>
+                    {
+                        cfg.ConfigureEndpoints(context);
+                    });
+                });
+            }
 
             return builder;
         }

@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DAO\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\VideoQRCode.API\VideoQRCode.API.csproj" />
     <ProjectReference Include="..\..\src\VideoQRCode.DAO\VideoQRCode.DAO.csproj" />
   </ItemGroup>

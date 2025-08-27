@@ -22,3 +22,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+// Torna o Program público para testes
+public partial class Program { }

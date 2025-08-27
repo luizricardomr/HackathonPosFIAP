@@ -6,10 +6,15 @@ namespace VideoQRCode.API.Configuration
 {
     public static class MongoDbConfig
     {
+        private static bool _isDateTimeSerializerRegistered = false;
         public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration)
         {
-            BsonSerializer.RegisterSerializer(new DateTimeSerializer(DateTimeKind.Local));
 
+            if (!_isDateTimeSerializerRegistered)
+            {
+                BsonSerializer.RegisterSerializer(new DateTimeSerializer(DateTimeKind.Local));
+                _isDateTimeSerializerRegistered = true;
+            }
             var mongoSection = configuration.GetSection("MongoDb");
             var connectionString = mongoSection["ConnectionString"];
             var databaseName = mongoSection["DatabaseName"];
