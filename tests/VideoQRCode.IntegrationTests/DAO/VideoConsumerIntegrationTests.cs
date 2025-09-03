@@ -16,9 +16,10 @@ namespace VideoQRCode.IntegrationTests.DAO
         {
             var videoServiceMock = new Mock<IVideoService>();
             var videoRepoMock = new Mock<IVideoRepository>();
+            var notificacaoMock = new Mock<INotificacaoService>();
 
             var harness = new InMemoryTestHarness();
-            var consumerHarness = harness.Consumer(() => new VideoConsumer(videoServiceMock.Object, videoRepoMock.Object));
+            var consumerHarness = harness.Consumer(() => new VideoConsumer(videoServiceMock.Object, videoRepoMock.Object, notificacaoMock.Object));
 
             await harness.Start();
             try
@@ -35,7 +36,6 @@ namespace VideoQRCode.IntegrationTests.DAO
 
                 Assert.True(await consumerHarness.Consumed.Any<VideoMessage>());
 
-                // ⚠️ Corrigido: usa It.IsAny<VideoMessage>()
                 videoRepoMock.Verify(r => r.UpdateStatusAsync(It.IsAny<Guid>(), "Processando"), Times.Once);
                 videoServiceMock.Verify(s => s.ProcessaVideo(It.IsAny<VideoMessage>()), Times.Once);
             }

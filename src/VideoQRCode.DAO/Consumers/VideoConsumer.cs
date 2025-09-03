@@ -1,5 +1,7 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using VideoQRCode.Core.Message;
+using VideoQRCode.DAO.Hubs;
 using VideoQRCode.DAO.Infra.Repository;
 using VideoQRCode.DAO.Services;
 
@@ -9,18 +11,25 @@ namespace VideoQRCode.DAO.Consumers
     {
         private readonly IVideoService _service;
         private readonly IVideoRepository _videoRepository;
+        private readonly INotificacaoService _notificacaoService;
 
         public VideoConsumer(IVideoService service,
-                             IVideoRepository videoRepository)
+                             IVideoRepository videoRepository,
+                             INotificacaoService notificacaoService)
         {
             _service = service;
             _videoRepository = videoRepository;
+            _notificacaoService = notificacaoService;
         }
 
         public async Task Consume(ConsumeContext<VideoMessage> context)
         {
-            await _videoRepository.UpdateStatusAsync(context.Message.Id, "Processando");
+            var fileName = context.Message.FileName;
+            await _notificacaoService.NotificarStatusAsync(fileName, "Processando");
+            await Task.Delay(3000);
             await _service.ProcessaVideo(context.Message);
+            await Task.Delay(3000);
+            await _notificacaoService.NotificarStatusAsync(fileName, "Concluído");
         }
     }
 }

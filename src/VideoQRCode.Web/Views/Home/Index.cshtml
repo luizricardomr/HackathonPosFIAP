@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Importar Vídeo";
+}
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<div class="card shadow p-4 mt-4">
+    <h2 class="mb-3">Importar Vídeo</h2>
+
+    <form asp-controller="Home" asp-action="Upload" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="arquivo" class="form-label">Selecione o vídeo:</label>
+            <input type="file" class="form-control" name="arquivo" id="arquivo" accept="video/*" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Importar</button>
+    </form>
+
+    @if (ViewBag.Mensagem != null)
+    {
+        <div class="alert alert-info mt-3">@ViewBag.Mensagem</div>
+    }
+
+    <h3>Status do envio atualizado com SignalR</h3>
+    <ul id="statusList"></ul>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    window.API_BASE_URL = '@Configuration["ApiConfig:UrlDao"]';
+    console.log("API Base URL:", window.API_BASE_URL);
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(window.API_BASE_URL + "videoHub")
+        .build();
+
+    connection.on("StatusAtualizado", (dados) => {
+        console.log("Status do vídeo:", dados);
+        const lista = document.getElementById("statusList");
+        const item = document.createElement("li");
+        item.textContent = `O processamento do Vídeo ${dados.fileName} está ${dados.status}`;
+        lista.appendChild(item);
+    });
+
+    (async () => {
+        try {
+            await connection.start();
+            console.log("Conectado ao SignalR!");
+        } catch (err) {
+            console.error("Erro ao conectar no SignalR:", err);
+        }
+    })();
+</script>
+
+

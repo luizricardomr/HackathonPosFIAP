@@ -15,8 +15,9 @@ namespace VideoQRCode.Tests.Consumers
             // Arrange
             var serviceMock = new Mock<IVideoService>();
             var repositoryMock = new Mock<IVideoRepository>();
+            var rnotificacaoServiceMock = new Mock<INotificacaoService>();
 
-            var consumer = new VideoConsumer(serviceMock.Object, repositoryMock.Object);
+            var consumer = new VideoConsumer(serviceMock.Object, repositoryMock.Object, rnotificacaoServiceMock.Object);
 
             var mensagem = new VideoMessage
             {

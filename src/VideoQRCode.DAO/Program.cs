@@ -1,24 +1,36 @@
 using VideoQRCode.DAO.Configuration;
+using VideoQRCode.DAO.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApiConfig();
+// Configuração dos serviços e CORS
+builder.AddApiConfig();
 
+// SignalR
+builder.Services.AddSignalR();
+
+// Outros serviços (Mongo, Rabbit, etc)
 builder.Services.AddMongo(builder.Configuration);
 RabbitConfiguration.Configure(builder);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Ordem correta do middleware
+app.UseRouting();
+
+app.UseCors("AllowFrontend");
+
+app.UseEndpoints(endpoints =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+    endpoints.MapHub<VideoHub>("/videoHub");
+});
 
 app.MapControllers();
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
 
 app.Run();

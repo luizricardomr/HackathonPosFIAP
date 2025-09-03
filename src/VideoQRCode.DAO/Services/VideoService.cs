@@ -24,6 +24,9 @@ namespace VideoQRCode.DAO.Services
 
         public async Task ProcessaVideo(VideoMessage message)
         {
+
+            await _videoRepository.UpdateStatusAsync(message.Id, "Processando");
+            
             var frames = await _frameExtractor.ExtractFramesAsync(message.Path);
             var resultados = await _frameProcessor.ProcessFramesAsync(frames);
 

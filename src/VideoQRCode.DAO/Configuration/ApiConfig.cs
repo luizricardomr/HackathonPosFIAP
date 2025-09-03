@@ -8,18 +8,12 @@ namespace VideoQRCode.DAO.Configuration
 {
     public static class ApiConfig
     {
-        public static IServiceCollection AddApiConfig(this IServiceCollection services)
+        public static IServiceCollection AddApiConfig(this WebApplicationBuilder builder)
         {
-            services.AddControllers();
-            services.AddEndpointsApiExplorer();
-            services.AddScoped<IVideoRepository, VideoRepository>();
-            services.AddScoped<IConteudoVideoRepository, ConteudoVideoRepository>();
-            services.AddScoped<IVideoService, VideoService>();
-            services.AddScoped<IConteudoVideoService, ConteudoVideoService>();
-            services.AddScoped<IFrameExtractor, FrameExtractor>();
-            services.AddScoped<IFrameProcessor, FrameProcessor>();
-
-            services.AddSwaggerGen(c =>
+            // Controllers e Swagger
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
@@ -34,8 +28,29 @@ namespace VideoQRCode.DAO.Configuration
                 });
             });
 
+            // Registro dos serviços internos
+            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+            builder.Services.AddScoped<IConteudoVideoRepository, ConteudoVideoRepository>();
+            builder.Services.AddScoped<IVideoService, VideoService>();
+            builder.Services.AddScoped<IConteudoVideoService, ConteudoVideoService>();
+            builder.Services.AddScoped<IFrameExtractor, FrameExtractor>();
+            builder.Services.AddScoped<IFrameProcessor, FrameProcessor>();
+            builder.Services.AddScoped<INotificacaoService, NotificacaoService>();
 
-            return services;
+            // CORS para frontend local (SignalR/WebSocket)
+            var frontendUrl = builder.Configuration["FrontendConfig:Url"]; // ex: "http://localhost:5286"
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins(frontendUrl) 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
+            return builder.Services;
         }
     }
 }
