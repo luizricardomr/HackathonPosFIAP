@@ -15,9 +15,9 @@ namespace VideoQRCode.Tests.Consumers
             // Arrange
             var serviceMock = new Mock<IVideoService>();
             var repositoryMock = new Mock<IVideoRepository>();
-            var rnotificacaoServiceMock = new Mock<INotificacaoService>();
+            var notificacaoServiceMock = new Mock<INotificacaoService>();
 
-            var consumer = new VideoConsumer(serviceMock.Object, repositoryMock.Object, rnotificacaoServiceMock.Object);
+            var consumer = new VideoConsumer(serviceMock.Object, repositoryMock.Object, notificacaoServiceMock.Object);
 
             var mensagem = new VideoMessage
             {
@@ -30,12 +30,14 @@ namespace VideoQRCode.Tests.Consumers
             var consumeContextMock = new Mock<ConsumeContext<VideoMessage>>();
             consumeContextMock.Setup(c => c.Message).Returns(mensagem);
 
-            // Act
+            // Act}
             await consumer.Consume(consumeContextMock.Object);
 
             // Assert
-            repositoryMock.Verify(r => r.UpdateStatusAsync(mensagem.Id, "Processando"), Times.Once);
+            notificacaoServiceMock.Verify(n => n.NotificarStatusAsync("video.mp4", "Processando"), Times.Once);
+            notificacaoServiceMock.Verify(n => n.NotificarStatusAsync("video.mp4", "Concluído"), Times.Once);
             serviceMock.Verify(s => s.ProcessaVideo(mensagem), Times.Once);
+
         }
     }
 }

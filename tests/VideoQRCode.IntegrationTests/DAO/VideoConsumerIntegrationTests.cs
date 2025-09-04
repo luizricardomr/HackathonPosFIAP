@@ -36,8 +36,9 @@ namespace VideoQRCode.IntegrationTests.DAO
 
                 Assert.True(await consumerHarness.Consumed.Any<VideoMessage>());
 
-                videoRepoMock.Verify(r => r.UpdateStatusAsync(It.IsAny<Guid>(), "Processando"), Times.Once);
+                notificacaoMock.Verify(n => n.NotificarStatusAsync("teste.mp4", "Processando"), Times.Once);
                 videoServiceMock.Verify(s => s.ProcessaVideo(It.IsAny<VideoMessage>()), Times.Once);
+                notificacaoMock.Verify(n => n.NotificarStatusAsync("teste.mp4", "Concluído"), Times.Once);
             }
             finally
             {
