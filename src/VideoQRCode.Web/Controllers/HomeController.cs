@@ -29,8 +29,8 @@ namespace VideoQRCode.Web.Controllers
             bool sucesso = await _videoService.EnviarVideoAsync(arquivo);
 
             ViewBag.Mensagem = sucesso
-                ? $"Vídeo '{arquivo.FileName}' enviado com sucesso!"
-                : "Falha ao enviar vídeo.";
+                ? $"Video '{arquivo.FileName}' enviado com sucesso!"
+                : "Falha ao enviar video.";
 
             return View("Index");
         }
